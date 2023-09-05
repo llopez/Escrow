@@ -14,6 +14,24 @@ contract EscrowUnlockTest is Test {
         vm.deal(u1, 1 ether);
     }
 
+    function testReverts_unlock_when_wrong_id() public {
+        uint256 _amount = 0.5 ether;
+
+        // create deal
+        vm.prank(u1);
+        uint dealId = escrow.createDeal(u1, u2, _amount);
+
+        // lock funds
+        vm.prank(u1);
+        escrow.lock{value: _amount}(dealId);
+
+        vm.expectRevert("not found");
+
+        // unlock
+        vm.prank(u1);
+        escrow.unlock(1);
+    }
+
     function test_unlock_when_deal_is_locked() public {
         uint256 _amount = 0.5 ether;
 

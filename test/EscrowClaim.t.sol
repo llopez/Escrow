@@ -14,7 +14,29 @@ contract EscrowClaimTest is Test {
         vm.deal(u1, 1 ether);
     }
 
-    function test_claim_when_unlocked_deal() public {
+    function testReverts_claim_when_wrong_id() public {
+        uint256 _amount = 0.5 ether;
+
+        // create deal
+        vm.prank(u1);
+        uint dealId = escrow.createDeal(u1, u2, _amount);
+
+        // deposit and lock funds
+        vm.prank(u1);
+        escrow.lock{value: _amount}(dealId);
+
+        // unlock funds
+        vm.prank(u1);
+        escrow.unlock(dealId);
+
+        vm.expectRevert("not found");
+
+        // claim funds
+        vm.prank(u2);
+        escrow.claim(1);
+    }
+
+        function test_claim_when_unlocked_deal() public {
         uint256 _amount = 0.5 ether;
 
         // create deal

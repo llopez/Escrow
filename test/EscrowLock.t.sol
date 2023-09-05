@@ -34,6 +34,14 @@ contract EscrowLockTest is Test {
         assertEq(uint8(state), uint8(Escrow.DealState.LOCKED));
     }
 
+    function testReverts_lock_when_wrong_id() public {
+        vm.expectRevert("not found");
+
+        // lock funds
+        vm.prank(u1);
+        escrow.lock{value: 0.5 ether}(0);
+    }
+
     function testReverts_lock_when_deal_is_pending_and_zero_amount() public {
         uint256 _amount = 0.5 ether;
 

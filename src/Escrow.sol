@@ -44,6 +44,8 @@ contract Escrow {
 
         Deal storage deal = deals[dealId];
 
+        require(deal.amount != 0, "not found");
+
         require(deal.state == DealState.PENDING, "state transition missmatch");
 
         require(msg.value == deal.amount, "amount missmatch");
@@ -56,6 +58,8 @@ contract Escrow {
     function unlock(uint dealId) external {
         Deal storage deal = deals[dealId];
 
+        require(deal.amount != 0, "not found");
+
         require(deal.state == DealState.LOCKED, "state transition missmatch");
 
         require(msg.sender == deal.from, "from missmatch");
@@ -65,6 +69,8 @@ contract Escrow {
 
     function claim(uint dealId) external payable {
         Deal storage deal = deals[dealId];
+
+        require(deal.amount != 0, "not found");
 
         require(msg.sender == deal.to, "recipient missmatch");
 
