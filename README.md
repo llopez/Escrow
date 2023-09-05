@@ -1,3 +1,5 @@
+[![test](https://github.com/llopez/Escrow/actions/workflows/test.yml/badge.svg)](https://github.com/llopez/Escrow/actions/workflows/test.yml)
+
 ## Escrow
 
 The escrow holds the deposited tokens until the payment conditions are satisfied.
