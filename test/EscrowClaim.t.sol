@@ -45,6 +45,28 @@ contract EscrowClaimTest is Test {
         assertEq(u2.balance, _amount);
     }
 
+    function testRevert_claim_when_unlocked_deal_called_by_from() public {
+        uint256 _amount = 0.5 ether;
+
+        // create deal
+        vm.prank(u1);
+        uint dealId = escrow.createDeal(u1, u2, _amount);
+
+        // deposit and lock funds
+        vm.prank(u1);
+        escrow.lock{value: _amount}(dealId);
+
+        // unlock funds
+        vm.prank(u1);
+        escrow.unlock(dealId);
+
+        vm.expectRevert("recipient missmatch");
+
+        // claim funds called by from
+        vm.prank(u1);
+        escrow.claim(dealId);
+    }
+
     function testReverts_claim_when_locked_deal() public {
         uint256 _amount = 0.5 ether;
 
