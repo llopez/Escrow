@@ -26,6 +26,9 @@ contract Escrow {
         address to,
         uint256 amount
     ) external returns (uint) {
+        require(amount > 0, "amount missmatch");
+        require(from != to, "from / to missmatch");
+
         Deal memory deal = Deal(from, to, amount, DealState.PENDING);
         deals[dealsCount] = deal;
 
@@ -37,9 +40,11 @@ contract Escrow {
     }
 
     function lock(uint dealId) external payable {
-        require(msg.value != 0, "no payment");
+        require(msg.value != 0, "missing payment");
 
         Deal storage deal = deals[dealId];
+
+        require(deal.state == DealState.PENDING, "state transition missmatch");
 
         require(msg.value == deal.amount, "amount missmatch");
 
@@ -51,6 +56,8 @@ contract Escrow {
     function unlock(uint dealId) external {
         Deal storage deal = deals[dealId];
 
+        require(deal.state == DealState.LOCKED, "state transition missmatch");
+
         require(msg.sender == deal.from, "from missmatch");
 
         deal.state = DealState.UNLOCKED;
@@ -61,7 +68,7 @@ contract Escrow {
 
         require(msg.sender == deal.to, "recipient missmatch");
 
-        require(deal.state == DealState.UNLOCKED, "locked");
+        require(deal.state == DealState.UNLOCKED, "state transition missmatch");
 
         payable(msg.sender).transfer(deal.amount);
 
