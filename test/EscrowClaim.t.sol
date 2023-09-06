@@ -36,7 +36,7 @@ contract EscrowClaimTest is Test {
         escrow.claim(1);
     }
 
-        function test_claim_when_unlocked_deal() public {
+    function test_claim_when_unlocked_deal() public {
         uint256 _amount = 0.5 ether;
 
         // create deal
@@ -59,6 +59,9 @@ contract EscrowClaimTest is Test {
 
         // check u1 locked funds
         assertEq(escrow.balanceOf(u1), 0);
+
+        // check contract balance
+        assertEq(escrow.totalBalance(), 0);
 
         // check deal state
         assertEq(uint8(state), uint8(Escrow.DealState.CLAIMED));

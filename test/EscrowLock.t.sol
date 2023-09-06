@@ -30,6 +30,9 @@ contract EscrowLockTest is Test {
         // check u1 locked funds
         assertEq(escrow.balanceOf(u1), _amount);
 
+        // check contract balance
+        assertEq(escrow.totalBalance(), _amount);
+
         // check deal state
         assertEq(uint8(state), uint8(Escrow.DealState.LOCKED));
     }

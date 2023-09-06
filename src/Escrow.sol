@@ -20,6 +20,7 @@ contract Escrow {
 
     mapping(uint256 => Deal) public deals;
     mapping(address => uint256) public balanceOf;
+    uint public totalBalance = 0;
 
     function createDeal(
         address from,
@@ -51,6 +52,7 @@ contract Escrow {
         require(msg.value == deal.amount, "amount missmatch");
 
         balanceOf[msg.sender] += msg.value;
+        totalBalance += msg.value;
 
         deal.state = DealState.LOCKED;
     }
@@ -81,5 +83,6 @@ contract Escrow {
         deal.state = DealState.CLAIMED;
 
         balanceOf[deal.from] -= deal.amount;
+        totalBalance -=  deal.amount;
     }
 }
